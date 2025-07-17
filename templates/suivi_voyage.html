@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/suivi_voyage.css') }}">
+    <title>Suivi de Voyage</title>
+</head>
+<body>
+    <section id="sidebar">
+        <a href="#" class="brand">
+            <img src="static/images/logo_sfe.png" alt="Logo" class="logo">
+            <span class="text">BuildPowerTrack</span>
+        </a> 
+        <ul class="side-menu top"><li class="active">
+               <a href="{{ url_for('suivi_voyage')}}">
+                   <i class='bx bxs-message-dots'></i>
+                   <span class="text">Suivi De Voyage</span>
+               </a>
+           </li>
+        </ul>
+        <ul class="side-menu"><li>
+                <a href="{{ url_for('login')}}" class="logout" onclick="confirmLogout(event)">
+                    <i class='bx bxs-log-out-circle'></i>
+                    <span class="text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <section id="content">
+        <nav>
+            <i class='bx bx-menu'></i>
+            <input type="checkbox" id="switch-mode" hidden>
+            <label for="switch-mode" class="switch-mode"></label>
+        </nav>
+        <form id="filterForm">
+            <label for="date">Date :</label>
+            <input type="date" id="date" name="date">
+            <span style="margin-right: 15px;"></span> 
+       
+            <label for="codeBV">Code BV :</label>
+            <input type="text" id="codeBV" name="codeBV">
+            <span style="margin-right: 15px;"></span> 
+       
+            <label for="typeScan">Type de Scan :</label>
+            <select id="typeScan" name="typeScan">
+                <option value="">Tous</option>
+                <option value="Entrée">Entrée</option>
+                <option value="Sortie">Sortie</option>
+            </select>
+            <span style="margin-right: 15px;"></span> 
+       
+            <button type="button" onclick="filterAudit()">Filtrer</button>
+
+            <div class="pagination">
+                {% if page > 1 %}
+                    <a href="{{ url_for('suivi_voyage', page=page-1) }}" class="pagination__link">
+                        <span class="pagination__arrow">&#8592;</span>
+                    </a> <!-- Flèche gauche pour Previous -->
+                {% endif %}
+            
+                {% if audit_data_length >= limit %}
+                    {% if audit_data_length > page * limit %}
+                        <a href="{{ url_for('suivi_voyage', page=page+1) }}" class="pagination__link">
+                            <span class="pagination__arrow">&#8594;</span>
+                        </a> <!-- Flèche droite pour Next -->
+                    {% endif %}
+                {% endif %}
+                <span class="pagination__info">
+                    {% set start_index = (page - 1) * limit + 1 %}
+                    {% set end_index = page * limit if audit_data_length > page * limit else audit_data_length %}
+                    {{ start_index }} - {{ end_index }} sur {{ audit_data_length }}
+                </span> <!-- Affichage du nombre de pages -->
+            </div>
+                                 
+        </form>
+       
+       
+        <div id="auditTable">
+            <table id="auditData">
+                <thead>
+                    <tr>
+                        <th>Code BV</th>
+                        <th>Date de Scan</th>
+                        <th>Type de Scan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in audit_data %}
+                    <tr>
+                        <td><span class="arrow" onclick="toggleDetails(this, '{{ entry['Code_BV'] }}')">→</span> {{ entry['Code_BV'] }}</td>
+                        <td>{{ entry['DateTimeScan'] }}</td>
+                        <td>{{ entry['TypeScan'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>        
+       
+        <div id="detailsSection">
+            <table id="detailsTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Code BL</th>
+                        <th>Nombre d'entrée</th>
+                        <th>Nombre de sortie</th>
+                        <th>cachete</th>
+                        <th>signe</th>
+                    </tr>
+                </thead>
+                <tbody id="detailsBody"></tbody>
+            </table>
+        </div>
+       </section>    
+       
+       <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const dateInput = document.getElementById('date');
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const todayFormatted = `${year}-${month}-${day}`;
+            dateInput.value = todayFormatted;
+        });
+       // Définir l'URL de logout_confirm dans une variable JavaScript
+       var logoutConfirmUrl = "{{ url_for('logout_confirm') }}";
+       </script>
+              
+ <script src="{{ url_for('static', filename='js/suivi_voyage.js') }}"></script>
+</body>
+</html>
+

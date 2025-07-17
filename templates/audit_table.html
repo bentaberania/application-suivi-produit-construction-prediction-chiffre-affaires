@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultat de l'audit</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>Code BV</th>
+            <th>Date et Heure Scan</th>
+            <th>Type de Scan</th>
+        </tr>
+        {% for entry in audit_data %}
+        {% if entry['TypeScan'] == 'Entrance' or entry['TypeScan'] == 'Exit' %}
+        <tr>
+            <td>{{ entry['Code_BV'] }}</td>
+            <td>{{ entry['DateTimeScan'] }}</td>
+            <td>{{ entry['TypeScan'] }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </table>
+</body>
+</html>

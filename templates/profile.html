@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+    <title>Profile</title>
+</head>
+<body>
+ <!-- SIDEBAR -->
+ <section id="sidebar">
+    <a href="#" class="brand">
+        <img src="static/images/logo_sfe.png" alt="Logo" class="logo">
+        <span class="text">BuildPowerTrack</span>
+    </a>
+     <ul class="side-menu top">
+         <li>
+             <a href="{{ url_for('chiffre')}}">
+                 <i class='bx bxs-shopping-bag-alt'></i>
+                 <span class="text">Chiffre D'affaires</span>
+             </a>
+         </li>
+         
+        
+     </ul>
+     <ul class="side-menu">
+        <li class="active">
+        <a href="{{ url_for('profile')}}">
+            <i class='bx bxs-group'></i>
+            <span class="text">Profile</span>
+        </a>
+   </li>
+         <li>
+             <a href="{{ url_for('login')}}" class="logout" onclick="confirmLogout(event)">
+                 <i class='bx bxs-log-out-circle'></i>
+                 <span class="text">Logout</span>
+             </a>
+         </li>
+     </ul>
+ </section>
+ <!-- SIDEBAR -->
+
+ <!-- CONTENT -->
+ <section id="content">
+     <!-- NAVBAR -->
+     <nav>
+      <i class='bx bx-menu'></i>
+      
+      <input type="checkbox" id="switch-mode" hidden>
+      <label for="switch-mode" class="switch-mode"></label>
+  </nav>
+     <!-- NAVBAR -->
+
+
+     <!-- MAIN -->
+     <main>
+        <div class="table-header">
+            <h1>Liste du Personnel</h1>
+            <i class="fas fa-plus" onclick="showForm('new')"></i>
+        </div>
+    
+        <table class="personnel-table">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for personnel in agent_securites %}
+                <tr data-id="{{ personnel.id }}">
+                    <td>{{ personnel.nom }}</td>
+                    <td>{{ personnel.prenom }}</td>
+                    <td>{{ personnel.email }}</td>
+                    <td>{{ personnel.telephone }}</td>
+                    <td>
+                        <i class="fas fa-pen" onclick="showForm('{{ personnel.id }}')"></i>
+                        <i class="fas fa-trash trash-icon" onclick="deletePersonnel('{{ personnel.id }}')"></i>
+                    </td>
+                </tr>
+                {% endfor %}
+            
+                {% for personnel in agent_controles %}
+                <tr data-id="{{ personnel.id }}">
+                    <td>{{ personnel.nom }}</td>
+                    <td>{{ personnel.prenom }}</td>
+                    <td>{{ personnel.email }}</td>
+                    <td>{{ personnel.telephone }}</td>
+                    <td>
+                        <i class="fas fa-pen" onclick="showForm('{{ personnel.id }}')"></i>
+                        <i class="fas fa-trash trash-icon" onclick="deletePersonnel('{{ personnel.id }}')"></i>
+                    </td>
+                </tr>
+                {% endfor %}
+            
+                {% for personnel in admins %}
+                <tr data-id="{{ personnel.id }}">
+                    <td>{{ personnel.nom }}</td>
+                    <td>{{ personnel.prenom }}</td>
+                    <td>{{ personnel.email }}</td>
+                    <td>{{ personnel.telephone }}</td>
+                    <td>
+                        <i class="fas fa-pen" onclick="showForm('{{ personnel.id }}')"></i>
+                        <i class="fas fa-trash trash-icon" onclick="deletePersonnel('{{ personnel.id }}')"></i>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+        <form id="editForm" class="form-container" method="POST" style="display:none;">
+            {{ form.hidden_tag() }}
+            <input type="hidden" name="personnel_id" id="personnel_id">
+            <label for="nom">Nom:</label>
+            <input type="text" name="nom" id="nom" required>
+            <label for="prenom">Prénom:</label>
+            <input type="text" name="prenom" id="prenom" required>
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" required>
+            <label for="mot_passe">Mot de passe:</label>
+            <input type="password" name="mot_passe" id="mot_passe" required>
+            <label for="telephone">Téléphone:</label>
+            <input type="text" name="telephone" id="telephone" required>
+            <input type="submit" value="Ajouter/Modifier">
+            <input type="button" value="Annuler" onclick="hideForm()">
+        </form>
+    </main>    
+<!-- MAIN -->
+
+ </section>
+ <!-- CONTENT -->
+
+ <script>
+    // Définir l'URL de logout_confirm dans une variable JavaScript
+    var logoutConfirmUrl = "{{ url_for('logout_confirm') }}";
+</script>
+
+ <script src="static/js/profile.js"></script>
+</body>
+</html>

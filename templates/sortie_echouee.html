@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sortie_reussie.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <title>Le Scan - Sortie</title>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <section id="sidebar">
+        <a href="#" class="brand">
+            <img src="static/images/logo_sfe.png" alt="Logo" class="logo">
+            <span class="text">BuildPowerTrack</span>
+        </a> 
+        <ul class="side-menu top">
+            <li class="active">
+                <a href="{{ url_for('qrbar')}}">
+                    <i class='bx bxs-doughnut-chart'></i>
+                    <span class="text">Le Scan</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="side-menu">
+            <li>
+                <a href="{{ url_for('login')}}" class="logout" onclick="confirmLogout(event)">
+                    <i class='bx bxs-log-out-circle'></i>
+                    <span class="text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <!-- SIDEBAR -->
+
+    <!-- CONTENT -->
+    <section id="content">
+        <!-- NAVBAR -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <input type="checkbox" id="switch-mode" hidden>
+            <label for="switch-mode" class="switch-mode"></label>
+        </nav>
+        <!-- NAVBAR -->
+
+        <!-- MAIN -->
+        <main>
+            <!-- Flèche pour revenir à qrbar.html -->
+    <div class="back-arrow">
+        <a href="{{ url_for('qrbar') }}">
+            <i class="bx bx-arrow-back"></i>
+        </a>
+    </div>
+            <h1 style="color: red; text-align: center;">Sortie Interdite</h1>
+    <table id="routeTable"> <!-- Ajout de l'ID pour le cibler spécifiquement -->
+        <thead>
+            <tr>
+                <th>Code_BL</th>
+                <th>Nb Sortie</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td>{{ row.Code_BL }}</td>
+                <td style="color: red;">{{ row.FLG_sortie }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+        </main>
+        <!-- MAIN -->
+    </section>
+    <!-- CONTENT -->
+
+    <script>
+        // Définir l'URL de logout_confirm dans une variable JavaScript
+        var logoutConfirmUrl = "{{ url_for('logout_confirm') }}";
+    </script>
+
+    <script src="static/js/sortie_reussie.js"></script>
+</body>
+</html>
